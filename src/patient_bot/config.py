@@ -10,10 +10,14 @@ import os
 import re
 from urllib.parse import urlparse
 
+from dotenv import load_dotenv
+
 ASSESSMENT_NUMBER = "+18054398008"
 _E164_PATTERN = re.compile(r"^\+[1-9]\d{7,14}$")
 _MIN_CALL_DURATION_SECONDS = 30
 _MAX_CALL_DURATION_SECONDS = 600
+
+load_dotenv()
 
 
 class ConfigurationError(ValueError):
@@ -58,6 +62,10 @@ def load_settings(environ: dict[str, str] | None = None) -> Settings:
         "TTS_API_KEY",
         "CALLER_NUMBER",
     )
+    optional = (
+        "TWILIO_ACCOUNT_SID",
+        "TWILIO_AUTH_TOKEN",
+    )
     missing = [name for name in required if not values.get(name)]
     if missing:
         raise ConfigurationError(f"Missing required environment variables: {', '.join(missing)}")
@@ -68,6 +76,10 @@ def load_settings(environ: dict[str, str] | None = None) -> Settings:
         raise ConfigurationError("CALLER_NUMBER must be an E.164 phone number")
     if assessment_number != ASSESSMENT_NUMBER:
         raise ConfigurationError("ASSESSMENT_NUMBER must be the fixed assessment number")
+
+    for name in optional:
+        if name in values and values[name] and not values[name].strip():
+            raise ConfigurationError(f"{name} cannot be blank when provided")
 
     livekit_url = values["LIVEKIT_URL"]
     parsed_livekit_url = urlparse(livekit_url)
