@@ -7,7 +7,13 @@ name = "pretty-good-ai-patient-bot"
 version = "0.1.0"
 description = "Patient voice bot for the Pretty Good AI engineering challenge"
 requires-python = ">=3.11"
-dependencies = []
+dependencies = [
+    "livekit-agents>=1.0.0",
+    "livekit-plugins-deepgram>=1.0.0",
+    "livekit-plugins-openai>=1.0.0",
+    "python-dotenv>=1.0.0",
+    "twilio>=9.0.0",
+]
 
 [project.optional-dependencies]
 dev = [
