@@ -14,12 +14,23 @@ The repository scaffold is in place. Provider-specific LiveKit, STT, LLM, and TT
 - `docs/`: architecture, scenarios, bug-report, Loom, and implementation plan
 - `artifacts/`: reviewed recordings, transcripts, and metadata
 
-## Local checks
+## Local setup
 
-Create a virtual environment, install the development dependencies, and run:
+1. Copy [.env.example](.env.example) to `.env` and fill in the LiveKit, provider, Twilio, and caller-number values for your local setup.
+2. Install the project in a virtual environment:
+
+```powershell
+python -m venv .venv
+.\.venv\Scripts\Activate.ps1
+python -m pip install -e .[dev]
+```
+
+3. Validate the environment and call guardrails without placing a paid call:
 
 ```powershell
 python -m pytest
+python scripts\run_call.py --list
+python scripts\run_call.py 01 --validate-config
 ```
 
 Do not run paid calls until provider accounts, credentials, caller number, and the fixed assessment destination have been verified. Never commit `.env` or provider secrets.
